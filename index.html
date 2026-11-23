@@ -1,0 +1,622 @@
+ 
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yumi Analytics | Dashboard</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --purple: #8061bd;
+    --dark: #241b38;
+    --background: #f6f4fa;
+    --text: #302b3d;
+    --muted: #898396;
+    --border: #ece8f2;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: var(--background);
+    color: var(--text);
+}
+
+.layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 245px;
+    background: var(--dark);
+    color: white;
+    padding: 30px 20px;
+    flex-shrink: 0;
+}
+
+.brand {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 45px;
+}
+
+.brand span {
+    color: #b99ce8;
+}
+
+.menu-label {
+    color: #a99fba;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin: 25px 10px 12px;
+}
+
+.nav-link {
+    display: block;
+    padding: 13px;
+    margin-bottom: 5px;
+    color: #d7d0e3;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    background: #493761;
+    color: white;
+}
+
+.sidebar-footer {
+    margin-top: 60px;
+    font-size: 12px;
+    color: #a99fba;
+    line-height: 1.7;
+}
+
+main {
+    flex: 1;
+    min-width: 0;
+    padding: 30px 4%;
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 35px;
+}
+
+.topbar h1 {
+    font-size: 25px;
+    color: var(--dark);
+}
+
+.topbar p {
+    color: var(--muted);
+    font-size: 13px;
+    margin-top: 6px;
+}
+
+.profile {
+    background: white;
+    border: 1px solid var(--border);
+    padding: 10px 15px;
+    border-radius: 10px;
+    font-size: 13px;
+}
+
+.welcome {
+    background: linear-gradient(120deg, #493761, #8061bd);
+    color: white;
+    padding: 27px;
+    border-radius: 15px;
+    margin-bottom: 25px;
+}
+
+.welcome h2 {
+    font-size: 23px;
+    margin-bottom: 8px;
+}
+
+.welcome p {
+    color: #e3d9f3;
+    font-size: 14px;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 17px;
+    margin-bottom: 25px;
+}
+
+.stat-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 13px;
+    padding: 21px;
+}
+
+.stat-card p {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.stat-card h3 {
+    font-size: 25px;
+    color: var(--dark);
+    margin: 13px 0 8px;
+}
+
+.change {
+    color: #27845d;
+    font-size: 12px;
+}
+
+.panel-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 20px;
+    margin-bottom: 22px;
+}
+
+.panel {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 13px;
+    padding: 24px;
+    min-width: 0;
+}
+
+.panel h3 {
+    color: var(--dark);
+    font-size: 17px;
+    margin-bottom: 5px;
+}
+
+.subtitle {
+    color: var(--muted);
+    font-size: 12px;
+    margin-bottom: 22px;
+}
+
+.chart {
+    height: 210px;
+    display: flex;
+    align-items: end;
+    justify-content: space-around;
+    gap: 10px;
+    border-bottom: 1px solid var(--border);
+    padding: 10px 5px 0;
+}
+
+.bar-group {
+    flex: 1;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    align-items: center;
+    gap: 8px;
+}
+
+.bar {
+    width: 65%;
+    max-width: 38px;
+    border-radius: 6px 6px 0 0;
+    background: #bba5e1;
+    min-height: 5px;
+}
+
+.bar:nth-child(1) {
+    background: var(--purple);
+}
+
+.bar-label {
+    color: var(--muted);
+    font-size: 11px;
+    padding-bottom: 8px;
+}
+
+.chart-note {
+    color: var(--muted);
+    font-size: 11px;
+    margin-top: 12px;
+}
+
+.donut-area {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px 0 20px;
+}
+
+.donut {
+    width: 145px;
+    height: 145px;
+    border-radius: 50%;
+    background: conic-gradient(
+        #8061bd 0% 45%,
+        #bba5e1 45% 75%,
+        #e5ddf1 75% 100%
+    );
+    display: grid;
+    place-items: center;
+}
+
+.donut-center {
+    width: 93px;
+    height: 93px;
+    border-radius: 50%;
+    background: white;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.donut-center strong {
+    display: block;
+    color: var(--dark);
+    font-size: 20px;
+}
+
+.legend {
+    display: grid;
+    gap: 12px;
+}
+
+.legend-item {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.legend-name {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--purple);
+}
+
+.dot.two {
+    background: #bba5e1;
+}
+
+.dot.three {
+    background: #e5ddf1;
+}
+
+.activity {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.activity th,
+.activity td {
+    text-align: left;
+    padding: 14px 8px;
+    border-bottom: 1px solid var(--border);
+}
+
+.activity th {
+    color: var(--muted);
+    font-weight: normal;
+    font-size: 11px;
+}
+
+.status {
+    background: #e5f5ec;
+    color: #27845d;
+    border-radius: 20px;
+    padding: 5px 9px;
+    font-size: 11px;
+}
+
+.disclaimer {
+    color: var(--muted);
+    font-size: 11px;
+    text-align: center;
+    margin-top: 25px;
+}
+
+@media(max-width: 1000px) {
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media(max-width: 700px) {
+    .layout {
+        display: block;
+    }
+
+    .sidebar {
+        width: 100%;
+        padding: 18px;
+    }
+
+    .brand {
+        margin-bottom: 15px;
+    }
+
+    .menu-label,
+    .sidebar-footer {
+        display: none;
+    }
+
+    .sidebar nav {
+        display: flex;
+        overflow-x: auto;
+        gap: 5px;
+    }
+
+    .nav-link {
+        white-space: nowrap;
+        margin: 0;
+        padding: 10px;
+    }
+
+    main {
+        padding: 24px 17px;
+    }
+
+    .panel-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .topbar {
+        align-items: flex-start;
+    }
+
+    .topbar h1 {
+        font-size: 21px;
+    }
+
+    .profile {
+        font-size: 11px;
+    }
+
+    .stat-card {
+        padding: 15px;
+    }
+
+    .stat-card h3 {
+        font-size: 21px;
+    }
+
+    .panel {
+        padding: 18px;
+    }
+
+    .activity {
+        font-size: 11px;
+    }
+
+    .activity th,
+    .activity td {
+        padding: 12px 5px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="layout">
+
+<aside class="sidebar">
+    <div class="brand">YUMI <span>ANALYTICS.</span></div>
+
+    <p class="menu-label">Menu principal</p>
+
+    <nav>
+        <a href="#inicio" class="nav-link active">▦ Visão geral</a>
+        <a href="#indicadores" class="nav-link">◈ Indicadores</a>
+        <a href="#relatorios" class="nav-link">▤ Relatórios</a>
+        <a href="#atividades" class="nav-link">◷ Atividades</a>
+    </nav>
+
+    <div class="sidebar-footer">
+        Yumi Analytics<br>
+        Dashboard demonstrativo
+    </div>
+</aside>
+
+<main>
+
+    <div class="topbar" id="inicio">
+        <div>
+            <h1>Visão geral</h1>
+            <p>Acompanhe os indicadores do seu negócio.</p>
+        </div>
+
+        <div class="profile">◉ Administrador</div>
+    </div>
+
+    <div class="welcome">
+        <h2>Bem-vindo ao Yumi Analytics!</h2>
+        <p>Tenha uma visão clara dos resultados e acompanhe o desempenho da empresa.</p>
+    </div>
+
+    <section class="stats" id="indicadores">
+
+        <div class="stat-card">
+            <p>Receita total</p>
+            <h3>R$ 48.250</h3>
+            <span class="change">↑ 12,5% no período</span>
+        </div>
+
+        <div class="stat-card">
+            <p>Clientes</p>
+            <h3>1.284</h3>
+            <span class="change">↑ 8,2% no período</span>
+        </div>
+
+        <div class="stat-card">
+            <p>Pedidos</p>
+            <h3>356</h3>
+            <span class="change">↑ 5,7% no período</span>
+        </div>
+
+        <div class="stat-card">
+            <p>Conversão</p>
+            <h3>4,8%</h3>
+            <span class="change">↑ 1,3% no período</span>
+        </div>
+
+    </section>
+
+    <div class="panel-grid" id="relatorios">
+
+        <section class="panel">
+            <h3>Desempenho financeiro</h3>
+            <p class="subtitle">Receita mensal — valores fictícios</p>
+
+            <div class="chart">
+
+                <div class="bar-group">
+                    <div class="bar" style="height:35%"></div>
+                    <span class="bar-label">Jan</span>
+                </div>
+
+                <div class="bar-group">
+                    <div class="bar" style="height:48%"></div>
+                    <span class="bar-label">Fev</span>
+                </div>
+
+                <div class="bar-group">
+                    <div class="bar" style="height:42%"></div>
+                    <span class="bar-label">Mar</span>
+                </div>
+
+                <div class="bar-group">
+                    <div class="bar" style="height:65%"></div>
+                    <span class="bar-label">Abr</span>
+                </div>
+
+                <div class="bar-group">
+                    <div class="bar" style="height:58%"></div>
+                    <span class="bar-label">Mai</span>
+                </div>
+
+                <div class="bar-group">
+                    <div class="bar" style="height:85%"></div>
+                    <span class="bar-label">Jun</span>
+                </div>
+
+                <div class="bar-group">
+                    <div class="bar" style="height:100%"></div>
+                    <span class="bar-label">Jul</span>
+                </div>
+
+            </div>
+
+            <p class="chart-note">Dados ilustrativos para demonstração.</p>
+        </section>
+
+        <section class="panel">
+            <h3>Distribuição de vendas</h3>
+            <p class="subtitle">Participação por categoria</p>
+
+            <div class="donut-area">
+                <div class="donut">
+                    <div class="donut-center">
+                        <div>
+                            <strong>100%</strong>
+                            Total
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="legend">
+                <div class="legend-item">
+                    <span class="legend-name"><i class="dot"></i> Serviços</span>
+                    <strong>45%</strong>
+                </div>
+
+                <div class="legend-item">
+                    <span class="legend-name"><i class="dot two"></i> Produtos</span>
+                    <strong>30%</strong>
+                </div>
+
+                <div class="legend-item">
+                    <span class="legend-name"><i class="dot three"></i> Outros</span>
+                    <strong>25%</strong>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <section class="panel" id="atividades">
+        <h3>Atividades recentes</h3>
+        <p class="subtitle">Exemplos de movimentações do sistema</p>
+
+        <table class="activity">
+            <thead>
+                <tr>
+                    <th>Atividade</th>
+                    <th>Data</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>Novo pedido</td>
+                    <td>23/11/2026</td>
+                    <td><span class="status">Concluído</span></td>
+                </tr>
+
+                <tr>
+                    <td>Cadastro de cliente</td>
+                    <td>22/11/2026</td>
+                    <td><span class="status">Concluído</span></td>
+                </tr>
+
+                <tr>
+                    <td>Relatório mensal</td>
+                    <td>21/11/2026</td>
+                    <td><span class="status">Concluído</span></td>
+                </tr>
+
+                <tr>
+                    <td>Atualização financeira</td>
+                    <td>20/11/2026</td>
+                    <td><span class="status">Concluído</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <p class="disclaimer">
+        Dashboard demonstrativo. Todos os dados apresentados são fictícios.
+        Desenvolvido pelo Studio Yumi.
+    </p>
+
+</main>
+</div>
+
+</body>
+</html>
